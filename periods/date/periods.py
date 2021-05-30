@@ -38,6 +38,9 @@ class DatePeriod(Period):
 
     @staticmethod
     def _check_periods(begin: PERIOD_TYPE, end: PERIOD_TYPE):
+        if not isinstance(begin, (datetime.date, datetime.datetime)):
+            raise TypeError
+
         if begin > end:
             raise ValueError('Wrong dates')
 
@@ -76,6 +79,9 @@ class DatePeriod(Period):
 
     def __le__(self, other: CLASS_ITEM_TYPE) -> bool:
         """Проверка того, что данный период закончился раньше переданной периода и они ПЕРЕСЕКАЮТСЯ"""
+        if not isinstance(other, DatePeriod):
+            raise TypeError
+
         if not self.is_crossing(other):
             return False
 
@@ -116,6 +122,9 @@ class DatePeriod(Period):
 
     def __ge__(self, other: CLASS_ITEM_TYPE) -> bool:
         """Проверка того, что данный период закончился позже переданной периода и они ПЕРЕСЕКАЮТСЯ"""
+        if not isinstance(other, DatePeriod):
+            raise TypeError
+
         if not self.is_crossing(other):
             return False
 
@@ -130,6 +139,9 @@ class DatePeriod(Period):
 
     def __add__(self, other: CLASS_ITEM_TYPE) -> List[CLASS_ITEM_TYPE]:
         """Производит операцию добавления периода"""
+        if not isinstance(other, DatePeriod):
+            raise TypeError
+
         if self not in other and not self.is_crossing(other):
             return [self, other]
 
@@ -161,6 +173,9 @@ class DatePeriod(Period):
 
     def __sub__(self, other: CLASS_ITEM_TYPE) -> List[CLASS_ITEM_TYPE]:
         """Производит операцию вычитания периода"""
+        if not isinstance(other, DatePeriod):
+            raise TypeError
+
         if self not in other and not self.is_crossing(other):
             return [self, ]
 
@@ -195,6 +210,9 @@ class DatePeriod(Period):
 
     def split(self, other: CLASS_ITEM_TYPE) -> List[CLASS_ITEM_TYPE]:
         """Разбиение данного периода на периоды по переданному периоду (other)"""
+        if not isinstance(other, DatePeriod):
+            raise TypeError
+
         if self not in other and not self.is_crossing(other):
             return [self, ]
 
@@ -239,6 +257,9 @@ class DatePeriod(Period):
 
     def is_crossing(self, period: CLASS_ITEM_TYPE) -> bool:
         """Проверка того, что текущий период (self) пересекается с переданным периодом (other)."""
+        if not isinstance(period, DatePeriod):
+            raise TypeError
+
         return self.begin <= period.begin <= self.end or \
                self.begin <= period.end <= self.end or \
                period.begin <= self.begin <= period.end or \
@@ -246,12 +267,26 @@ class DatePeriod(Period):
 
     def crossing(self, other: CLASS_ITEM_TYPE) -> Optional[CLASS_ITEM_TYPE]:
         """Получение пересечения текущего периода (self) с переданным периодом (other)."""
+        if not isinstance(other, DatePeriod):
+            raise TypeError
+
         if self.is_crossing(other):
             begin_date = max(self.begin, other.begin)
             end_date = min(self.end, other.end)
-        else:
-            return
-        return DatePeriod(begin_date, end_date, self.data)
+            return DatePeriod(begin_date, end_date, self.data)
+
+        return
+
+    def must_crossing(self, other: CLASS_ITEM_TYPE) -> Optional[CLASS_ITEM_TYPE]:
+        """Получение пересечения текущего периода (self) с переданным периодом (other)."""
+        if not isinstance(other, DatePeriod):
+            raise TypeError
+
+        result = self.crossing(other)
+        if result is None:
+            raise ValueError
+
+        return result
 
     @classmethod
     def circle_sub(cls, period1: List[CLASS_ITEM_TYPE], period2: List[CLASS_ITEM_TYPE]) -> List[CLASS_ITEM_TYPE]:

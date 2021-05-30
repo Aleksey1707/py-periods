@@ -10,7 +10,7 @@ from periods.date.periods import DatePeriod
 
 
 class DatePeriodTest(unittest.TestCase):
-    '''
+    """
     Тестирование DatePeriod
 
     1) Не пересекающиеся периоды
@@ -60,7 +60,7 @@ class DatePeriodTest(unittest.TestCase):
     12) Не пересекающиеся однодневные периоды
         pC1 (DatePeriod):   |
         pC2 (DatePeriod):         |
-    '''
+    """
 
     def setUp(self) -> None:
         self.p11 = DatePeriod(datetime.date(2020, 1, 1), datetime.date(2020, 1, 25), data='p11')
@@ -182,6 +182,17 @@ class DatePeriodTest(unittest.TestCase):
         # Дата является концом периода - 1 день
         self.assertTrue(self.p11.end - datetime.timedelta(days=1) in self.p11)
 
+        # ======================== TypeError ======================
+
+        with self.assertRaises(TypeError):
+            'str' in self.p11
+
+        with self.assertRaises(TypeError):
+            True in self.p11
+
+        with self.assertRaises(TypeError):
+            123 in self.p11
+
     def test_lt(self):
         """Тестирование __lt__ / <"""
 
@@ -267,6 +278,35 @@ class DatePeriodTest(unittest.TestCase):
         # Дата является концом периода - 1 день
         self.assertFalse(self.p11 < self.p11.end - datetime.timedelta(days=1))
 
+        # ======================== TypeError ======================
+
+        with self.assertRaises(TypeError):
+            self.p11 < 'str'
+
+        with self.assertRaises(TypeError):
+            self.p11 < True
+
+        with self.assertRaises(TypeError):
+            self.p11 < 123
+
+        with self.assertRaises(TypeError):
+            self.p11 < []
+
+        with self.assertRaises(TypeError):
+            self.p11 < [x for x in range(5)]
+
+        with self.assertRaises(TypeError):
+            self.p11 < {}
+
+        with self.assertRaises(TypeError):
+            self.p11 < dict(((str(x), x) for x in range(5)))
+
+        with self.assertRaises(TypeError):
+            self.p11 < set()
+
+        with self.assertRaises(TypeError):
+            self.p11 < set([x for x in range(5)])
+
     def test_le(self):
         """Тестирование __le__ / <="""
 
@@ -327,6 +367,34 @@ class DatePeriodTest(unittest.TestCase):
 
         # Однодневные периоды равны, len(pC1) = 1
         self.assertFalse(self.pC1 <= self.pC1)
+
+        # ======================== TypeError ======================
+        with self.assertRaises(TypeError):
+            self.p11 <= 'str'
+
+        with self.assertRaises(TypeError):
+            self.p11 <= True
+
+        with self.assertRaises(TypeError):
+            self.p11 <= 123
+
+        with self.assertRaises(TypeError):
+            self.p11 <= []
+
+        with self.assertRaises(TypeError):
+            self.p11 <= [x for x in range(5)]
+
+        with self.assertRaises(TypeError):
+            self.p11 <= {}
+
+        with self.assertRaises(TypeError):
+            self.p11 <= dict(((str(x), x) for x in range(5)))
+
+        with self.assertRaises(TypeError):
+            self.p11 <= set()
+
+        with self.assertRaises(TypeError):
+            self.p11 <= set([x for x in range(5)])
 
     def test_gt(self):
         """Тестирование __gt__ / >"""
@@ -409,6 +477,35 @@ class DatePeriodTest(unittest.TestCase):
         # Дата является концом периода - 1 день
         self.assertFalse(self.p11 > self.p11.end - datetime.timedelta(days=1))
 
+        # ======================== TypeError ======================
+
+        with self.assertRaises(TypeError):
+            self.p11 > 'str'
+
+        with self.assertRaises(TypeError):
+            self.p11 > True
+
+        with self.assertRaises(TypeError):
+            self.p11 > 123
+
+        with self.assertRaises(TypeError):
+            self.p11 > []
+
+        with self.assertRaises(TypeError):
+            self.p11 > [x for x in range(5)]
+
+        with self.assertRaises(TypeError):
+            self.p11 > {}
+
+        with self.assertRaises(TypeError):
+            self.p11 > dict(((str(x), x) for x in range(5)))
+
+        with self.assertRaises(TypeError):
+            self.p11 > set()
+
+        with self.assertRaises(TypeError):
+            self.p11 > set([x for x in range(5)])
+
     def test_ge(self):
         """Тестирование __ge__ / >="""
 
@@ -469,6 +566,71 @@ class DatePeriodTest(unittest.TestCase):
 
         # Однодневные периоды равны, len(pC1) = 1
         self.assertFalse(self.pC1 >= self.pC1)
+
+        # ======================== Даты ======================
+
+        with self.assertRaises(TypeError):
+            # Дата является началом периода
+            self.p11 >= self.p11.begin
+
+        with self.assertRaises(TypeError):
+            # Дата является началом периода + 1 день
+            self.p11 >= self.p11.begin >= datetime.timedelta(days=1)
+
+        with self.assertRaises(TypeError):
+            # Дата является началом периода - 1 день
+            self.p11 >= self.p11.begin - datetime.timedelta(days=1)
+
+        with self.assertRaises(TypeError):
+            # Дата является началом периода - 10 дней
+            self.p11 >= self.p11.begin - datetime.timedelta(days=10)
+
+        #
+
+        with self.assertRaises(TypeError):
+            # Дата является концом периода
+            self.p11 >= self.p11.end
+
+        with self.assertRaises(TypeError):
+            # Дата является концом периода + 1 день
+            self.p11 >= self.p11.end >= datetime.timedelta(days=1)
+
+        with self.assertRaises(TypeError):
+            # Дата является концом периода + 10 день
+            self.p11 >= self.p11.end >= datetime.timedelta(days=10)
+
+        with self.assertRaises(TypeError):
+            # Дата является концом периода - 1 день
+            self.p11 >= self.p11.end - datetime.timedelta(days=1)
+
+        # ======================== TypeError ======================
+
+        with self.assertRaises(TypeError):
+            self.p11 >= 'str'
+
+        with self.assertRaises(TypeError):
+            self.p11 >= True
+
+        with self.assertRaises(TypeError):
+            self.p11 >= 123
+
+        with self.assertRaises(TypeError):
+            self.p11 >= []
+
+        with self.assertRaises(TypeError):
+            self.p11 >= [x for x in range(5)]
+
+        with self.assertRaises(TypeError):
+            self.p11 >= {}
+
+        with self.assertRaises(TypeError):
+            self.p11 >= dict(((str(x), x) for x in range(5)))
+
+        with self.assertRaises(TypeError):
+            self.p11 >= set()
+
+        with self.assertRaises(TypeError):
+            self.p11 >= set([x for x in range(5)])
 
     def test_eq(self):
         """Тестирование __eq__ / =="""
@@ -551,6 +713,34 @@ class DatePeriodTest(unittest.TestCase):
         # Дата является концом периода - 1 день
         self.assertFalse(self.p11 == self.p11.end - datetime.timedelta(days=1))
 
+        # ======================== TypeError ======================
+        with self.assertRaises(TypeError):
+            self.p11 == 'str'
+
+        with self.assertRaises(TypeError):
+            self.p11 == True
+
+        with self.assertRaises(TypeError):
+            self.p11 == 123
+
+        with self.assertRaises(TypeError):
+            self.p11 == []
+
+        with self.assertRaises(TypeError):
+            self.p11 == [x for x in range(5)]
+
+        with self.assertRaises(TypeError):
+            self.p11 == {}
+
+        with self.assertRaises(TypeError):
+            self.p11 == dict(((str(x), x) for x in range(5)))
+
+        with self.assertRaises(TypeError):
+            self.p11 == set()
+
+        with self.assertRaises(TypeError):
+            self.p11 == set([x for x in range(5)])
+
     def test_ne(self):
         """Тестирование __ne__ / !="""
 
@@ -631,6 +821,34 @@ class DatePeriodTest(unittest.TestCase):
         self.assertTrue(self.p11 != self.p11.end + datetime.timedelta(days=10))
         # Дата является концом периода - 1 день
         self.assertTrue(self.p11 != self.p11.end - datetime.timedelta(days=1))
+
+        # ======================== TypeError ======================
+        with self.assertRaises(TypeError):
+            self.p11 != 'str'
+
+        with self.assertRaises(TypeError):
+            self.p11 != True
+
+        with self.assertRaises(TypeError):
+            self.p11 != 123
+
+        with self.assertRaises(TypeError):
+            self.p11 != []
+
+        with self.assertRaises(TypeError):
+            self.p11 != [x for x in range(5)]
+
+        with self.assertRaises(TypeError):
+            self.p11 != {}
+
+        with self.assertRaises(TypeError):
+            self.p11 != dict(((str(x), x) for x in range(5)))
+
+        with self.assertRaises(TypeError):
+            self.p11 != set()
+
+        with self.assertRaises(TypeError):
+            self.p11 != set([x for x in range(5)])
 
     # ---------------------------------------------Арифметические операторы------------------------------------
 
@@ -850,6 +1068,35 @@ class DatePeriodTest(unittest.TestCase):
             # Дата является концом периода - 1 день
             self.p11 + self.p11.end - datetime.timedelta(days=1)
 
+            # ======================== TypeError ======================
+
+            with self.assertRaises(TypeError):
+                self.p11 + 'str'
+
+            with self.assertRaises(TypeError):
+                self.p11 + True
+
+            with self.assertRaises(TypeError):
+                self.p11 + 123
+
+            with self.assertRaises(TypeError):
+                self.p11 + []
+
+            with self.assertRaises(TypeError):
+                self.p11 + [x for x in range(5)]
+
+            with self.assertRaises(TypeError):
+                self.p11 + {}
+
+            with self.assertRaises(TypeError):
+                self.p11 + dict(((str(x), x) for x in range(5)))
+
+            with self.assertRaises(TypeError):
+                self.p11 + set()
+
+            with self.assertRaises(TypeError):
+                self.p11 + set([x for x in range(5)])
+
     def test_sub(self):
         """Тестирование __sub__ / -"""
 
@@ -1000,6 +1247,35 @@ class DatePeriodTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             # Дата является концом периода - 1 день
             self.p11 - self.p11.end - datetime.timedelta(days=1)
+
+            # ======================== TypeError ======================
+
+            with self.assertRaises(TypeError):
+                self.p11 - 'str'
+
+            with self.assertRaises(TypeError):
+                self.p11 - True
+
+            with self.assertRaises(TypeError):
+                self.p11 - 123
+
+            with self.assertRaises(TypeError):
+                self.p11 - []
+
+            with self.assertRaises(TypeError):
+                self.p11 - [x for x in range(5)]
+
+            with self.assertRaises(TypeError):
+                self.p11 - {}
+
+            with self.assertRaises(TypeError):
+                self.p11 - dict(((str(x), x) for x in range(5)))
+
+            with self.assertRaises(TypeError):
+                self.p11 - set()
+
+            with self.assertRaises(TypeError):
+                self.p11 - set([x for x in range(5)])
 
     # ---------------------------------------------Остальные операторы------------------------------------
 
@@ -1239,32 +1515,32 @@ class DatePeriodTest(unittest.TestCase):
 
         # ======================== TypeError ======================
 
-        # with self.assertRaises(TypeError):
-        #     self.p11.split('str')
-        #
-        # with self.assertRaises(TypeError):
-        #     self.p11.split(True)
-        #
-        # with self.assertRaises(TypeError):
-        #     self.p11.split(123)
-        #
-        # with self.assertRaises(TypeError):
-        #     self.p11.split([])
-        #
-        # with self.assertRaises(TypeError):
-        #     self.p11.split([x for x in range(5)])
-        #
-        # with self.assertRaises(TypeError):
-        #     self.p11.split({})
-        #
-        # with self.assertRaises(TypeError):
-        #     self.p11.split(dict(((str(x), x) for x in range(5))))
-        #
-        # with self.assertRaises(TypeError):
-        #     self.p11.split(set())
-        #
-        # with self.assertRaises(TypeError):
-        #     self.p11.split(set([x for x in range(5)]))
+        with self.assertRaises(TypeError):
+            self.p11.split('str')
+
+        with self.assertRaises(TypeError):
+            self.p11.split(True)
+
+        with self.assertRaises(TypeError):
+            self.p11.split(123)
+
+        with self.assertRaises(TypeError):
+            self.p11.split([])
+
+        with self.assertRaises(TypeError):
+            self.p11.split([x for x in range(5)])
+
+        with self.assertRaises(TypeError):
+            self.p11.split({})
+
+        with self.assertRaises(TypeError):
+            self.p11.split(dict(((str(x), x) for x in range(5))))
+
+        with self.assertRaises(TypeError):
+            self.p11.split(set())
+
+        with self.assertRaises(TypeError):
+            self.p11.split(set([x for x in range(5)]))
 
     def test_is_crossing(self):
         """Тестирование метода is_crossing"""
@@ -1326,6 +1602,35 @@ class DatePeriodTest(unittest.TestCase):
 
         # Однодневные периоды равны, len(pC1) = 1
         self.assertTrue(self.pC1.is_crossing(self.pC1))
+
+        # ======================== TypeError ======================
+
+        with self.assertRaises(TypeError):
+            self.p11.is_crossing('str')
+
+        with self.assertRaises(TypeError):
+            self.p11.is_crossing(True)
+
+        with self.assertRaises(TypeError):
+            self.p11.is_crossing(123)
+
+        with self.assertRaises(TypeError):
+            self.p11.is_crossing([])
+
+        with self.assertRaises(TypeError):
+            self.p11.is_crossing([x for x in range(5)])
+
+        with self.assertRaises(TypeError):
+            self.p11.is_crossing({})
+
+        with self.assertRaises(TypeError):
+            self.p11.is_crossing(dict(((str(x), x) for x in range(5))))
+
+        with self.assertRaises(TypeError):
+            self.p11.is_crossing(set())
+
+        with self.assertRaises(TypeError):
+            self.p11.is_crossing(set([x for x in range(5)]))
 
     def test_crossing(self):
         """Тестирование метода crossing"""
@@ -1449,9 +1754,38 @@ class DatePeriodTest(unittest.TestCase):
         self.assertEqual(pC1c.crossing(self.pC1), pC1c)
         self.assertEqual(pC1c.crossing(self.pC1).data, pC1c.data)
 
+        # ======================== TypeError ======================
+
+        with self.assertRaises(TypeError):
+            self.p11.crossing('str')
+
+        with self.assertRaises(TypeError):
+            self.p11.crossing(True)
+
+        with self.assertRaises(TypeError):
+            self.p11.crossing(123)
+
+        with self.assertRaises(TypeError):
+            self.p11.crossing([])
+
+        with self.assertRaises(TypeError):
+            self.p11.crossing([x for x in range(5)])
+
+        with self.assertRaises(TypeError):
+            self.p11.crossing({})
+
+        with self.assertRaises(TypeError):
+            self.p11.crossing(dict(((str(x), x) for x in range(5))))
+
+        with self.assertRaises(TypeError):
+            self.p11.crossing(set())
+
+        with self.assertRaises(TypeError):
+            self.p11.crossing(set([x for x in range(5)]))
+
 
 class CircleSubTest(unittest.TestCase):
-    '''
+    """
     Тестирование циклического вычетания периодов
 
     p11 (DatePeriod):        |====================================================|                 # 01.02.2020 - 31.07.2020
@@ -1495,7 +1829,7 @@ class CircleSubTest(unittest.TestCase):
     res (List): [
         01.01.2020 - 31.01.2020
     ]
-    '''
+    """
 
     def setUp(self):
         self.p11 = DatePeriod(datetime.date(2020, 2, 1), datetime.date(2020, 7, 31), data='p11')
@@ -1572,7 +1906,7 @@ class CircleSubTest(unittest.TestCase):
 
 
 class CircleCrossingTest(unittest.TestCase):
-    '''
+    """
     Тестирование циклического пересечения периодов.
 
     p11 (DatePeriod):        |====================================================|                 # 01.02.2020 - 31.07.2020
@@ -1589,7 +1923,7 @@ class CircleCrossingTest(unittest.TestCase):
         01.03.2020 - 05.04.2020,
         01.04.2020 - 20.04.2020,
     ]
-    '''
+    """
 
     def setUp(self):
         self.p11 = DatePeriod(datetime.date(2020, 2, 1), datetime.date(2020, 7, 31), data='p11')
