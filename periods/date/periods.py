@@ -100,7 +100,7 @@ class DatePeriod(Period):
             raise TypeError
 
     def __ne__(self, other: FULL_ITEM_TYPE) -> bool:
-        """Проверка того, что данный период не является идентчиным второму периоду"""
+        """Проверка того, что данный период не является идентичным второму периоду"""
         if isinstance(other, type(self.begin)):
             return True
         elif isinstance(other, DatePeriod):
