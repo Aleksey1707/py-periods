@@ -8,8 +8,7 @@ setup(
     name='py-periods',
     version=__version__,
     author='Aleksey Odinokov',
-    url='',
-    download_url='',
+    url='https://github.com/Aleksey1707/py-periods',
     description='Python application that can operate with periods',
     long_description=codecs.open('README.md', encoding='utf8').read(),
     license='MIT license',
@@ -23,4 +22,5 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+    python_requires='>=3.6',
 )
